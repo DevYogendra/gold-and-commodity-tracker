@@ -3,328 +3,78 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gold Tracker — Price & Cost Ratio</title>
+  <title>Gold Tracker — Price &amp; Cost Ratio</title>
+  <meta name="description" content="Live gold spot price, production cost (AISC), and historical price-to-cost ratio since 1900." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     :root {
-      --gold: #c9a84c;
-      --gold-light: #e8c96d;
-      --gold-dim: #7a6128;
-      --bg: #0a0906;
-      --bg2: #111009;
-      --bg3: #1a1710;
-      --border: rgba(201,168,76,0.15);
-      --border-strong: rgba(201,168,76,0.35);
-      --text: #e8e0cc;
-      --text-muted: #7a7060;
-      --text-dim: #4a4438;
-      --green: #3d9e6e;
-      --red: #c05a4a;
-      --radius: 6px;
+      --gold: #c9a84c; --gold-light: #e8c96d; --gold-dim: #7a6128;
+      --bg: #0a0906; --bg2: #111009; --bg3: #1a1710;
+      --border: rgba(201,168,76,0.15); --border-strong: rgba(201,168,76,0.35);
+      --text: #e8e0cc; --text-muted: #7a7060; --text-dim: #4a4438;
+      --green: #3d9e6e; --red: #c05a4a; --coral: #D85A30; --radius: 6px;
     }
     [data-theme="light"] {
-      --bg: #faf8f2;
-      --bg2: #f2ede0;
-      --bg3: #e8e0cc;
-      --border: rgba(140,100,20,0.15);
-      --border-strong: rgba(140,100,20,0.35);
-      --text: #1a1208;
-      --text-muted: #6a5c38;
-      --text-dim: #b0a080;
-      --gold: #8c6414;
-      --gold-light: #a07820;
-      --gold-dim: #c8a860;
+      --bg: #faf8f2; --bg2: #f2ede0; --bg3: #e8e0cc;
+      --border: rgba(140,100,20,0.15); --border-strong: rgba(140,100,20,0.35);
+      --text: #1a1208; --text-muted: #6a5c38; --text-dim: #b0a080;
+      --gold: #8c6414; --gold-light: #a07820; --gold-dim: #c8a860;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'DM Mono', monospace;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      font-size: 13px;
-      line-height: 1.6;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    /* ── Header ── */
-    header {
-      border-bottom: 0.5px solid var(--border);
-      padding: 1.25rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 100;
-      backdrop-filter: blur(8px);
-    }
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.03em;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo-dot {
-      width: 8px; height: 8px;
-      background: var(--gold);
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
-    }
-    .header-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      font-weight: 400;
-      padding: 6px 14px;
-      border-radius: var(--radius);
-      border: 0.5px solid var(--border-strong);
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      letter-spacing: 0.06em;
-      transition: all 0.2s;
-    }
+    body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 13px; line-height: 1.6; transition: background 0.3s, color 0.3s; }
+    header { border-bottom: 0.5px solid var(--border); padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em; display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+    .btn { font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 14px; border-radius: var(--radius); border: 0.5px solid var(--border-strong); background: transparent; color: var(--text-muted); cursor: pointer; letter-spacing: 0.06em; transition: all 0.2s; }
     .btn:hover { background: var(--bg3); color: var(--text); border-color: var(--gold-dim); }
-    .btn-gold {
-      background: var(--gold-dim);
-      color: var(--gold-light);
-      border-color: var(--gold-dim);
-    }
+    .btn-gold { background: var(--gold-dim); color: var(--gold-light); border-color: var(--gold-dim); }
     .btn-gold:hover { background: var(--gold); color: var(--bg); }
-
-    /* ── Main ── */
-    main {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-    }
-
-    /* ── Hero metrics ── */
-    .hero {
-      margin-bottom: 2.5rem;
-      animation: fadeUp 0.6s ease both;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .hero-label {
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-    .hero-price {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 8vw, 5rem);
-      font-weight: 600;
-      color: var(--gold-light);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-    .hero-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .change-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-left: 10px;
-      font-weight: 500;
-    }
+    main { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .hero { margin-bottom: 2rem; animation: fadeUp 0.6s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .hero-label { font-size: 10px; letter-spacing: 0.14em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .hero-price { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem,8vw,5rem); font-weight: 600; color: var(--gold-light); line-height: 1; margin-bottom: 0.5rem; }
+    .change-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-left: 10px; }
     .change-badge.up { background: rgba(61,158,110,0.15); color: #5cbf88; }
     .change-badge.down { background: rgba(192,90,74,0.15); color: #e07060; }
     .change-badge.neutral { background: var(--bg3); color: var(--text-muted); }
-
-    /* ── Metric cards ── */
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 2.5rem;
-      animation: fadeUp 0.6s 0.1s ease both;
-    }
-    .card {
-      background: var(--bg2);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem 1.25rem;
-      transition: border-color 0.2s;
-    }
+    .hero-sub { font-size: 12px; color: var(--text-muted); }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 2rem; animation: fadeUp 0.6s 0.1s ease both; }
+    .card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.9rem 1.1rem; transition: border-color 0.2s; }
     .card:hover { border-color: var(--border-strong); }
-    .card-label {
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-bottom: 6px;
-    }
-    .card-value {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 400;
-      color: var(--text);
-    }
+    .card-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 5px; }
+    .card-value { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; color: var(--text); }
     .card-value.highlight { color: var(--gold-light); }
-    .card-sub {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* ── Section ── */
-    .section-label {
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 0.5px;
-      background: var(--border);
-    }
-
-    /* ── Chart ── */
-    .chart-section {
-      animation: fadeUp 0.6s 0.2s ease both;
-      margin-bottom: 2.5rem;
-    }
-    .chart-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 1rem;
-    }
-    .tab {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      padding: 5px 12px;
-      border-radius: var(--radius);
-      border: 0.5px solid var(--border);
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tab.active, .tab:hover {
-      background: var(--bg3);
-      color: var(--gold);
-      border-color: var(--gold-dim);
-    }
-    .chart-wrap {
-      background: var(--bg2);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-    }
-    .chart-canvas-wrap {
-      position: relative;
-      width: 100%;
-      height: 320px;
-    }
-
-    /* ── Status bar ── */
-    .status-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      color: var(--text-dim);
-      margin-top: 0.75rem;
-      letter-spacing: 0.04em;
-    }
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 2s infinite;
-    }
+    .card-value.above { color: #5cbf88; }
+    .card-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+    .section-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+    .section-label::after { content:''; flex:1; height:0.5px; background:var(--border); }
+    .chart-section { animation: fadeUp 0.6s 0.2s ease both; margin-bottom: 2rem; }
+    .chart-tabs { display: flex; gap: 4px; margin-bottom: 1rem; }
+    .tab { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 5px 12px; border-radius: var(--radius); border: 0.5px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
+    .tab.active, .tab:hover { background: var(--bg3); color: var(--gold); border-color: var(--gold-dim); }
+    .chart-wrap { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; font-size: 11px; color: var(--text-muted); align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .chart-canvas-wrap { position: relative; width: 100%; height: 340px; }
+    .status-bar { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text-dim); margin-top: 0.75rem; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
     .status-dot.loading { background: var(--gold-dim); }
     .status-dot.error { background: var(--red); animation: none; }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 0.5px solid var(--border);
-      padding: 1.25rem 2rem;
-      text-align: center;
-      font-size: 10px;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
-    }
-
-    /* ── Share toast ── */
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--bg3);
-      border: 0.5px solid var(--border-strong);
-      color: var(--gold-light);
-      font-size: 11px;
-      padding: 10px 20px;
-      border-radius: 30px;
-      transition: transform 0.3s ease;
-      z-index: 999;
-      letter-spacing: 0.06em;
-    }
+    footer { border-top: 0.5px solid var(--border); padding: 1.25rem 2rem; text-align: center; font-size: 10px; color: var(--text-dim); letter-spacing: 0.06em; }
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--bg3); border: 0.5px solid var(--border-strong); color: var(--gold-light); font-size: 11px; padding: 10px 20px; border-radius: 30px; transition: transform 0.3s ease; z-index: 999; }
     .toast.show { transform: translateX(-50%) translateY(0); }
-
-    /* ── Skeleton loading ── */
-    .skeleton {
-      background: linear-gradient(90deg, var(--bg2) 25%, var(--bg3) 50%, var(--bg2) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.4s infinite;
-      border-radius: 4px;
-      color: transparent;
-    }
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    @media (max-width: 600px) {
-      header { padding: 1rem; }
-      main { padding: 1.5rem 1rem 3rem; }
-      .hero-price { font-size: 3rem; }
-    }
+    @media (max-width: 600px) { header{padding:1rem} main{padding:1.5rem 1rem 3rem} .hero-price{font-size:3rem} }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <span class="logo-dot"></span>
-    GOLD TRACKER
-  </div>
+  <div class="logo"><span class="logo-dot"></span>GOLD TRACKER</div>
   <div class="header-actions">
     <button class="btn" id="themeBtn" onclick="toggleTheme()">☀ LIGHT</button>
     <button class="btn btn-gold" onclick="shareUrl()">↗ SHARE</button>
@@ -332,25 +82,23 @@
 </header>
 
 <main>
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-label">Live spot price · XAU/USD · per troy oz</div>
-    <div style="display:flex; align-items:baseline; flex-wrap:wrap; gap: 4px;">
+    <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;">
       <div class="hero-price" id="livePrice">—</div>
       <span class="change-badge neutral" id="changeBadge">loading…</span>
     </div>
     <div class="hero-sub" id="lastUpdated">Fetching latest price…</div>
   </div>
 
-  <!-- Metric cards -->
   <div class="metrics">
     <div class="card">
       <div class="card-label">Production Cost (AISC)</div>
-      <div class="card-value highlight" id="prodCostCard">~$1,521</div>
+      <div class="card-value highlight">~$1,521</div>
       <div class="card-sub">2025 global avg · updated annually</div>
     </div>
     <div class="card">
-      <div class="card-label">Price / Cost Ratio</div>
+      <div class="card-label">Live Ratio</div>
       <div class="card-value highlight" id="ratioCard">—</div>
       <div class="card-sub">live price ÷ production cost</div>
     </div>
@@ -360,274 +108,196 @@
       <div class="card-sub">profit per troy oz at spot</div>
     </div>
     <div class="card">
-      <div class="card-label">Historic Peak Ratio</div>
-      <div class="card-value">~3.2×</div>
-      <div class="card-sub">2026 · highest on record</div>
+      <div class="card-label">Median Ratio</div>
+      <div class="card-value" id="medianCard">—</div>
+      <div class="card-sub">1900–2026 historical median</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Mean Ratio</div>
+      <div class="card-value" id="meanCard">—</div>
+      <div class="card-sub">1900–2026 historical mean</div>
+    </div>
+    <div class="card">
+      <div class="card-label">vs Median</div>
+      <div class="card-value above" id="vsMedianCard">—</div>
+      <div class="card-sub">current ratio premium</div>
     </div>
   </div>
 
-  <!-- Chart -->
   <div class="chart-section">
     <div class="section-label">Historical ratio 1900–today</div>
     <div class="chart-tabs">
-      <button class="tab active" onclick="setView('ratio')">Price / Cost ratio</button>
-      <button class="tab" onclick="setView('price')">Market price</button>
-      <button class="tab" onclick="setView('both')">Both</button>
+      <button class="tab active" onclick="setView('ratio',event)">Price / cost ratio</button>
+      <button class="tab" onclick="setView('price',event)">Market price</button>
+      <button class="tab" onclick="setView('both',event)">Both</button>
     </div>
     <div class="chart-wrap">
-      <div class="chart-canvas-wrap">
-        <canvas id="mainChart"></canvas>
+      <div class="chart-legend" id="chartLegend">
+        <span class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:#c9a84c;display:inline-block;"></span>Price/cost ratio</span>
+        <span class="legend-item"><span style="width:20px;border-top:2px dashed #D85A30;display:inline-block;"></span>&nbsp;Median</span>
       </div>
+      <div class="chart-canvas-wrap"><canvas id="mainChart"></canvas></div>
       <div class="status-bar">
         <span class="status-dot" id="statusDot"></span>
-        <span id="statusText">Live data connected</span>
+        <span id="statusText">Connecting…</span>
       </div>
     </div>
   </div>
 
-  <!-- Notes -->
   <div class="section-label">Notes</div>
-  <div class="card" style="line-height:1.9; color: var(--text-muted); font-size:11px; letter-spacing:0.03em;">
-    Production cost = All-In Sustaining Cost (AISC), the industry standard metric covering mining, processing, labour, energy, sustaining capex &amp; environmental costs. Pre-1970 figures are estimates from historical mining records. Live price via gold-api.com, updated on page load. AISC updated annually from industry reports.
+  <div class="card" style="line-height:1.9;color:var(--text-muted);font-size:11px;letter-spacing:0.03em;">
+    Production cost = All-In Sustaining Cost (AISC), covering mining, processing, labour, energy, sustaining capex &amp; environmental costs. Pre-1970 figures are estimates from historical mining records. Live price fetched from gold-api.com on page load with 3 API fallbacks. Median and mean computed over 73 data points, 1900–2026. AISC updated annually from industry reports.
   </div>
 </main>
 
-<footer>
-  GOLD TRACKER · DATA: GOLD-API.COM + HISTORICAL RECORDS · BUILT WITH GITHUB PAGES
-</footer>
-
+<footer>GOLD TRACKER · DATA: GOLD-API.COM + HISTORICAL RECORDS · GITHUB PAGES</footer>
 <div class="toast" id="toast">Link copied to clipboard</div>
 
 <script>
   const PROD_COST = 1521;
-
-  const histYears = [
-    1900,1905,1910,1915,1920,1925,1930,1933,1934,1940,1945,1950,1955,1960,1965,1968,
-    1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,
-    1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,
-    2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,
-    2018,2019,2020,2021,2022,2023,2024,2025
-  ];
-  const histPrice = [
-    20.67,20.67,20.67,20.67,20.67,20.67,20.67,26,35,35,35,35,35,35,35,39,
-    36,41,58,97,154,161,125,148,193,307,615,460,376,424,361,317,
-    368,447,437,381,383,362,344,360,384,384,388,331,294,279,279,271,
-    310,363,410,445,604,697,872,973,1225,1570,1669,1411,1266,1160,1251,1257,
-    1269,1392,1770,1799,1800,1943,2386,3000
-  ];
-  const histCost = [
-    12,12,13,14,15,16,17,18,20,22,24,25,26,27,28,30,
-    32,33,35,38,50,70,80,95,110,175,250,230,210,200,195,190,
-    195,200,205,210,215,215,210,205,210,215,220,225,210,200,195,185,
-    185,190,210,230,280,380,500,550,700,900,850,750,700,650,680,700,
-    730,800,970,1050,1100,1100,1200,1521
-  ];
+  const histYears = [1900,1905,1910,1915,1920,1925,1930,1933,1934,1940,1945,1950,1955,1960,1965,1968,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+  const histPrice = [20.67,20.67,20.67,20.67,20.67,20.67,20.67,26,35,35,35,35,35,35,35,39,36,41,58,97,154,161,125,148,193,307,615,460,376,424,361,317,368,447,437,381,383,362,344,360,384,384,388,331,294,279,279,271,310,363,410,445,604,697,872,973,1225,1570,1669,1411,1266,1160,1251,1257,1269,1392,1770,1799,1800,1943,2386,3000];
+  const histCost  = [12,12,13,14,15,16,17,18,20,22,24,25,26,27,28,30,32,33,35,38,50,70,80,95,110,175,250,230,210,200,195,190,195,200,205,210,215,215,210,205,210,215,220,225,210,200,195,185,185,190,210,230,280,380,500,550,700,900,850,750,700,650,680,700,730,800,970,1050,1100,1100,1200,1521];
   const histRatio = histYears.map((y,i) => +(histPrice[i]/histCost[i]).toFixed(2));
 
-  let livePrice = null;
-  let currentView = 'ratio';
-  let chart = null;
+  function computeMedian(arr) {
+    const s=[...arr].sort((a,b)=>a-b), m=Math.floor(s.length/2);
+    return s.length%2!==0 ? s[m] : +((s[m-1]+s[m])/2).toFixed(2);
+  }
+  const MEDIAN = computeMedian(histRatio);
+  const MEAN   = +(histRatio.reduce((a,b)=>a+b,0)/histRatio.length).toFixed(2);
 
-  function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+  document.getElementById('medianCard').textContent = MEDIAN.toFixed(2)+'×';
+  document.getElementById('meanCard').textContent   = MEAN.toFixed(2)+'×';
+
+  let livePrice=null, currentView='ratio', chart=null;
+  function isDark(){ return document.documentElement.getAttribute('data-theme')==='dark'; }
 
   function buildChartData(view, live) {
-    const labels = [...histYears];
-    const prices = [...histPrice];
-    const costs = [...histCost];
-    const ratios = [...histRatio];
-
+    const labels=[...histYears], prices=[...histPrice], costs=[...histCost], ratios=[...histRatio];
     if (live) {
-      const yr = new Date().getFullYear();
-      if (labels[labels.length-1] !== yr) {
-        labels.push(yr);
-        prices.push(live);
-        costs.push(PROD_COST);
-        ratios.push(+(live/PROD_COST).toFixed(2));
-      } else {
-        prices[prices.length-1] = live;
-        ratios[ratios.length-1] = +(live/PROD_COST).toFixed(2);
-      }
+      const yr=new Date().getFullYear();
+      if (labels[labels.length-1]!==yr){ labels.push(yr);prices.push(live);costs.push(PROD_COST);ratios.push(+(live/PROD_COST).toFixed(2)); }
+      else { prices[prices.length-1]=live; ratios[ratios.length-1]=+(live/PROD_COST).toFixed(2); }
     }
-
-    const datasets = [];
-    if (view === 'ratio' || view === 'both') {
-      datasets.push({
-        label: 'Price/Cost Ratio',
-        data: ratios,
-        yAxisID: 'y',
-        borderColor: '#c9a84c',
-        backgroundColor: 'rgba(201,168,76,0.07)',
-        fill: view === 'ratio',
-        tension: 0.3,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: '#c9a84c',
-        borderWidth: 2.5,
-        _prices: prices,
-        _costs: costs
-      });
+    const medLine=labels.map(()=>MEDIAN);
+    const datasets=[];
+    if (view==='ratio'||view==='both') {
+      datasets.push({ label:'Price/Cost Ratio', data:ratios, yAxisID:'y', borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,0.07)', fill:view==='ratio', tension:0.3, pointRadius:0, pointHoverRadius:5, pointHoverBackgroundColor:'#c9a84c', borderWidth:2.5, _prices:prices, _costs:costs, _ratios:ratios });
+      datasets.push({ label:'Median', data:medLine, yAxisID:'y', borderColor:'#D85A30', borderWidth:1.5, borderDash:[6,4], pointRadius:0, pointHoverRadius:0, fill:false, tension:0 });
     }
-    if (view === 'price' || view === 'both') {
-      datasets.push({
-        label: 'Market Price (USD/oz)',
-        data: prices,
-        yAxisID: view === 'both' ? 'y2' : 'y',
-        borderColor: '#3d9e6e',
-        backgroundColor: 'rgba(61,158,110,0.07)',
-        fill: view === 'price',
-        tension: 0.3,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: '#3d9e6e',
-        borderWidth: 2,
-        borderDash: view === 'both' ? [4,3] : []
-      });
+    if (view==='price'||view==='both') {
+      datasets.push({ label:'Market Price (USD/oz)', data:prices, yAxisID:view==='both'?'y2':'y', borderColor:'#3d9e6e', backgroundColor:'rgba(61,158,110,0.07)', fill:view==='price', tension:0.3, pointRadius:0, pointHoverRadius:5, pointHoverBackgroundColor:'#3d9e6e', borderWidth:2, borderDash:view==='both'?[4,3]:[] });
     }
-    return { labels, datasets, prices, costs, ratios };
+    return {labels,datasets,prices,costs,ratios};
   }
 
-  function createChart(view, live) {
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    if (chart) chart.destroy();
-
-    const { labels, datasets, prices, costs, ratios } = buildChartData(view, live);
-    const textMuted = isDark() ? '#4a4438' : '#b0a080';
-    const gridColor = isDark() ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)';
-
-    const scales = {
-      x: {
-        ticks: { color: textMuted, maxTicksLimit: 14, autoSkip: true, maxRotation: 0, font: { family: "'DM Mono'", size: 10 } },
-        grid: { color: gridColor },
-        border: { color: 'transparent' }
-      },
-      y: {
-        ticks: {
-          color: textMuted,
-          font: { family: "'DM Mono'", size: 10 },
-          callback: v => view === 'price' ? '$' + v.toLocaleString() : v.toFixed(1) + '×'
-        },
-        grid: { color: gridColor },
-        border: { color: 'transparent' },
-        title: { display: false }
-      }
+  function createChart(view,live) {
+    const ctx=document.getElementById('mainChart').getContext('2d');
+    if(chart) chart.destroy();
+    const {labels,datasets,prices,costs,ratios}=buildChartData(view,live);
+    const tm=isDark()?'#4a4438':'#b0a080', gc=isDark()?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.05)';
+    const scales={
+      x:{ ticks:{color:tm,maxTicksLimit:14,autoSkip:true,maxRotation:0,font:{family:"'DM Mono'",size:10}}, grid:{color:gc}, border:{color:'transparent'} },
+      y:{ ticks:{color:tm,font:{family:"'DM Mono'",size:10},callback:v=>view==='price'?'$'+v.toLocaleString():v.toFixed(1)+'×'}, grid:{color:gc}, border:{color:'transparent'} }
     };
-    if (view === 'both') {
-      scales.y2 = {
-        position: 'right',
-        ticks: { color: '#3d9e6e', font: { family: "'DM Mono'", size: 10 }, callback: v => '$' + v.toLocaleString() },
-        grid: { display: false },
-        border: { color: 'transparent' }
-      };
-    }
-
-    chart = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: isDark() ? '#1a1710' : '#faf8f2',
-            borderColor: isDark() ? 'rgba(201,168,76,0.3)' : 'rgba(140,100,20,0.3)',
-            borderWidth: 1,
-            titleColor: isDark() ? '#c9a84c' : '#8c6414',
-            bodyColor: isDark() ? '#9a8c6c' : '#6a5c38',
-            padding: 12,
-            callbacks: {
-              title: ctx => 'Year ' + ctx[0].label,
-              label: ctx => {
-                const ds = ctx.dataset;
-                const i = ctx.dataIndex;
-                if (ds.label === 'Price/Cost Ratio') {
-                  return [
-                    'Ratio: ' + ctx.parsed.y.toFixed(2) + '×',
-                    'Gold price: $' + (ds._prices[i]||0).toLocaleString() + '/oz',
-                    'Prod. cost: $' + (ds._costs[i]||0).toLocaleString() + '/oz'
-                  ];
+    if(view==='both') scales.y2={position:'right',ticks:{color:'#3d9e6e',font:{family:"'DM Mono'",size:10},callback:v=>'$'+v.toLocaleString()},grid:{display:false},border:{color:'transparent'}};
+    chart=new Chart(ctx,{
+      type:'line', data:{labels,datasets},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:isDark()?'#1a1710':'#faf8f2',
+            borderColor:isDark()?'rgba(201,168,76,0.3)':'rgba(140,100,20,0.3)',
+            borderWidth:1, titleColor:isDark()?'#c9a84c':'#8c6414',
+            bodyColor:isDark()?'#9a8c6c':'#6a5c38', padding:12,
+            filter:item=>item.dataset.label!=='Median',
+            callbacks:{
+              title:ctx=>'Year '+ctx[0].label,
+              label:ctx=>{
+                const ds=ctx.dataset, i=ctx.dataIndex;
+                if(ds.label==='Price/Cost Ratio'){
+                  const r=(ds._ratios||ratios)[i];
+                  const diff=(((r-MEDIAN)/MEDIAN)*100).toFixed(0);
+                  return['Ratio: '+r.toFixed(2)+'×','Gold price: $'+(ds._prices||prices)[i].toLocaleString()+'/oz','Prod. cost: $'+(ds._costs||costs)[i].toLocaleString()+'/oz','vs median: '+(diff>0?'+':'')+diff+'%'];
                 }
-                return ds.label + ': $' + ctx.parsed.y.toLocaleString() + '/oz';
-              },
-              afterLabel: () => null
+                return ds.label+': $'+ctx.parsed.y.toLocaleString()+'/oz';
+              }
             }
           }
         },
         scales
       }
     });
+    const leg=document.getElementById('chartLegend');
+    if(view==='ratio') leg.innerHTML=`<span class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:#c9a84c;display:inline-block;"></span>Price/cost ratio</span><span class="legend-item"><span style="width:20px;border-top:2px dashed #D85A30;display:inline-block;"></span>&nbsp;Median (${MEDIAN.toFixed(2)}×)</span>`;
+    else if(view==='price') leg.innerHTML=`<span class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:#3d9e6e;display:inline-block;"></span>Market price (USD/oz)</span>`;
+    else leg.innerHTML=`<span class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:#c9a84c;display:inline-block;"></span>Ratio (left)</span><span class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:#3d9e6e;display:inline-block;"></span>Price (right)</span><span class="legend-item"><span style="width:20px;border-top:2px dashed #D85A30;display:inline-block;"></span>&nbsp;Median (${MEDIAN.toFixed(2)}×)</span>`;
   }
 
-  function setView(view) {
-    currentView = view;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    createChart(view, livePrice);
+  function setView(view,e){
+    currentView=view;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    e.target.classList.add('active');
+    createChart(view,livePrice);
   }
 
-  async function fetchLivePrice() {
-    const dot = document.getElementById('statusDot');
-    const statusText = document.getElementById('statusText');
-    dot.className = 'status-dot loading';
-    statusText.textContent = 'Fetching live price…';
-    try {
-      const res = await fetch('https://gold-api.com/price/XAU');
-      const data = await res.json();
-      livePrice = data.price;
-      const change = data.ch || 0;
-      const changePct = data.chp || 0;
+  async function tryFetchPrice(){
+    const apis=[
+      async()=>{const r=await fetch('https://gold-api.com/price/XAU');const d=await r.json();if(!d.price)throw new Error();return{price:d.price,change:d.ch||0,changePct:d.chp||0};},
+      async()=>{const r=await fetch('https://api.frankfurter.app/latest?from=XAU&to=USD');const d=await r.json();if(!d.rates?.USD)throw new Error();return{price:d.rates.USD,change:0,changePct:0};},
+      async()=>{const r=await fetch('https://api.coinbase.com/v2/exchange-rates?currency=XAU');const d=await r.json();const p=d.data?.rates?.USD?parseFloat(d.data.rates.USD):null;if(!p)throw new Error();return{price:p,change:0,changePct:0};}
+    ];
+    for(const api of apis){try{return await api();}catch(e){continue;}}
+    throw new Error('all failed');
+  }
 
-      document.getElementById('livePrice').textContent = '$' + livePrice.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-      const badge = document.getElementById('changeBadge');
-      const sign = change >= 0 ? '+' : '';
-      badge.textContent = sign + change.toFixed(2) + ' (' + sign + changePct.toFixed(2) + '%)';
-      badge.className = 'change-badge ' + (change >= 0 ? 'up' : 'down');
-
-      const ratio = (livePrice / PROD_COST).toFixed(2);
-      const margin = (livePrice - PROD_COST).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
-      document.getElementById('ratioCard').textContent = ratio + '×';
-      document.getElementById('marginCard').textContent = '$' + margin;
-
-      const now = new Date();
-      document.getElementById('lastUpdated').textContent = 'Last updated: ' + now.toLocaleTimeString();
-
-      dot.className = 'status-dot';
-      statusText.textContent = 'Live data connected · updates on page load';
-
-      createChart(currentView, livePrice);
-    } catch(e) {
-      dot.className = 'status-dot error';
-      statusText.textContent = 'Could not fetch live price · showing historical data';
-      document.getElementById('livePrice').textContent = 'N/A';
-      document.getElementById('changeBadge').textContent = 'offline';
-      document.getElementById('changeBadge').className = 'change-badge neutral';
-      createChart(currentView, null);
+  async function fetchLivePrice(){
+    const dot=document.getElementById('statusDot'), st=document.getElementById('statusText');
+    dot.className='status-dot loading'; st.textContent='Fetching live price…';
+    try{
+      const{price,change,changePct}=await tryFetchPrice();
+      livePrice=price;
+      document.getElementById('livePrice').textContent='$'+livePrice.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const badge=document.getElementById('changeBadge');
+      if(change!==0){const sign=change>=0?'+':'';badge.textContent=sign+change.toFixed(2)+' ('+sign+changePct.toFixed(2)+'%)';badge.className='change-badge '+(change>=0?'up':'down');}
+      else{badge.textContent='live';badge.className='change-badge up';}
+      const ratio=+(livePrice/PROD_COST).toFixed(2);
+      const margin=Math.round(livePrice-PROD_COST).toLocaleString('en-US');
+      const vsMedian=(((ratio-MEDIAN)/MEDIAN)*100).toFixed(0);
+      document.getElementById('ratioCard').textContent=ratio.toFixed(2)+'×';
+      document.getElementById('marginCard').textContent='$'+margin;
+      document.getElementById('vsMedianCard').textContent=(vsMedian>0?'+':'')+vsMedian+'%';
+      document.getElementById('lastUpdated').textContent='Last updated: '+new Date().toLocaleTimeString();
+      dot.className='status-dot'; st.textContent='Live data connected · updates on page load';
+      createChart(currentView,livePrice);
+    }catch(e){
+      dot.className='status-dot error'; st.textContent='Could not fetch live price · showing historical data only';
+      document.getElementById('livePrice').textContent='N/A';
+      document.getElementById('changeBadge').textContent='offline';
+      document.getElementById('changeBadge').className='change-badge neutral';
+      document.getElementById('lastUpdated').textContent='Live feed unavailable — markets may be closed or APIs unreachable';
+      createChart(currentView,null);
     }
   }
 
-  function toggleTheme() {
-    const html = document.documentElement;
-    const isDarkMode = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDarkMode ? 'light' : 'dark');
-    document.getElementById('themeBtn').textContent = isDarkMode ? '☽ DARK' : '☀ LIGHT';
-    createChart(currentView, livePrice);
+  function toggleTheme(){
+    const html=document.documentElement, dark=html.getAttribute('data-theme')==='dark';
+    html.setAttribute('data-theme',dark?'light':'dark');
+    document.getElementById('themeBtn').textContent=dark?'☽ DARK':'☀ LIGHT';
+    createChart(currentView,livePrice);
   }
 
-  function shareUrl() {
-    const url = window.location.href;
-    if (navigator.share) {
-      navigator.share({ title: 'Gold Tracker', text: 'Live gold price & cost ratio tracker', url });
-    } else {
-      navigator.clipboard.writeText(url).then(() => {
-        const toast = document.getElementById('toast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
-      });
-    }
+  function shareUrl(){
+    const url=window.location.href;
+    if(navigator.share){navigator.share({title:'Gold Tracker',text:'Live gold price & cost ratio tracker',url});}
+    else{navigator.clipboard.writeText(url).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);});}
   }
 
-  createChart('ratio', null);
+  createChart('ratio',null);
   fetchLivePrice();
 </script>
 </body>
