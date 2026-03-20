@@ -129,8 +129,8 @@
     <div class="mcard"><div class="mcard-label">Production Cost</div><div class="mcard-value accent" id="m-cost">—</div><div class="mcard-sub" id="m-cost-sub">—</div></div>
     <div class="mcard"><div class="mcard-label">Live Ratio</div><div class="mcard-value accent" id="m-ratio">—</div><div class="mcard-sub">live price ÷ cost</div></div>
     <div class="mcard"><div class="mcard-label">Margin</div><div class="mcard-value" id="m-margin">—</div><div class="mcard-sub">profit per unit</div></div>
-    <div class="mcard"><div class="mcard-label">Median Ratio</div><div class="mcard-value" id="m-median">—</div><div class="mcard-sub">full history</div></div>
-    <div class="mcard"><div class="mcard-label">Mean Ratio</div><div class="mcard-value" id="m-mean">—</div><div class="mcard-sub">full history</div></div>
+    <div class="mcard"><div class="mcard-label">Median Ratio</div><div class="mcard-value" id="m-median">—</div><div class="mcard-sub">time-weighted history</div></div>
+    <div class="mcard"><div class="mcard-label">Mean Ratio</div><div class="mcard-value" id="m-mean">—</div><div class="mcard-sub">time-weighted history</div></div>
     <div class="mcard"><div class="mcard-label">vs Median</div><div class="mcard-value above" id="m-vsmedian">—</div><div class="mcard-sub">current premium</div></div>
   </div>
 
@@ -144,7 +144,7 @@
 
   <div class="section-label">Notes</div>
   <div class="mcard" style="line-height:1.9;color:var(--text-muted);font-size:11px;letter-spacing:0.03em;">
-    Gold &amp; Silver production costs = AISC (All-In Sustaining Cost). Oil "production cost" = avg breakeven cost per barrel. Historical data from 1900 for gold; shorter series for silver and oil. Live metal prices via api.gold-api.com (free, no key). Live oil prices via EIA Open Data API (free, requires registration). All prices in USD. Markets closed on weekends — last close shown.
+    Gold &amp; Silver production costs = AISC (All-In Sustaining Cost). Oil "production cost" = avg breakeven cost per barrel. Gold data: annual averages from 1900 (US fixed price / London free market from 1968). Silver: annual from 1970. WTI &amp; Brent: annual from 1970/1987 respectively. Sources: Kitco, WGC, Silver Institute, EIA/BP Statistical Review. Live metal prices via api.gold-api.com (free, no key). Live oil prices via EIA Open Data API (free, requires registration). All prices in USD. Markets closed on weekends — last close shown. Median and Mean ratios are <strong>time-weighted</strong> by year-span where data points are non-annual; with the current annual dataset all points carry equal weight.
   </div>
 </main>
 
@@ -156,38 +156,70 @@ const COMMODITIES = {
   XAU:{
     name:'Gold',unit:'per troy oz',accentHex:'#c9a84c',
     prodCost:1521,prodCostLabel:'AISC 2025 global avg',
-    histYears:[1900,1905,1910,1915,1920,1925,1930,1933,1934,1940,1945,1950,1955,1960,1965,1968,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
-    histPrice:[20.67,20.67,20.67,20.67,20.67,20.67,20.67,26,35,35,35,35,35,35,35,39,36,41,58,97,154,161,125,148,193,307,615,460,376,424,361,317,368,447,437,381,383,362,344,360,384,384,388,331,294,279,279,271,310,363,410,445,604,697,872,973,1225,1570,1669,1411,1266,1160,1251,1257,1269,1392,1770,1799,1800,1943,2386,3000],
-    histCost:[12,12,13,14,15,16,17,18,20,22,24,25,26,27,28,30,32,33,35,38,50,70,80,95,110,175,250,230,210,200,195,190,195,200,205,210,215,215,210,205,210,215,220,225,210,200,195,185,185,190,210,230,280,380,500,550,700,900,850,750,700,650,680,700,730,800,970,1050,1100,1100,1200,1521],
+    // Annual avg prices. 1900-1967: US fixed/London market. 1968+: free market avg. Sources: Kitco/WGC/USGS.
+    histYears:[1900,1901,1902,1903,1904,1905,1906,1907,1908,1909,1910,1911,1912,1913,1914,1915,1916,1917,1918,1919,1920,1921,1922,1923,1924,1925,1926,1927,1928,1929,1930,1931,1932,1933,1934,1935,1936,1937,1938,1939,1940,1941,1942,1943,1944,1945,1946,1947,1948,1949,1950,1951,1952,1953,1954,1955,1956,1957,1958,1959,1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    histPrice:[20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,20.67,26.33,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,35.00,39.31,41.51,36.02,40.80,58.42,97.39,154.00,161.02,124.74,147.71,193.22,306.68,614.75,459.65,375.71,424.35,360.48,317.26,367.87,446.86,436.94,381.44,383.51,362.11,343.82,359.77,384.17,383.79,387.80,330.98,294.24,278.98,279.29,271.04,309.73,363.38,409.72,444.74,603.46,695.39,871.96,972.35,1224.53,1569.74,1668.98,1411.23,1266.40,1160.06,1250.74,1257.15,1268.49,1392.60,1769.64,1798.61,1800.20,1943.00,2386.00,3000.00],
+    histCost:[12,12,12,12,12,12,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,17,18,18,18,18,18,19,20,20,20,21,21,22,22,22,23,23,24,24,24,24,24,25,25,25,25,25,26,26,26,27,27,27,28,28,29,30,32,33,35,38,50,70,80,95,110,175,250,230,210,200,195,190,195,200,205,210,215,215,210,205,210,215,220,225,210,200,195,185,185,190,210,230,280,380,500,550,700,900,850,750,700,650,680,700,730,800,970,1050,1100,1100,1200,1521],
     fetchFn:async()=>{const r=await fetch('https://api.gold-api.com/price/XAU');const d=await r.json();if(!d.price)throw new Error();return{price:d.price,change:d.ch||0,changePct:d.chp||0};}
   },
   XAG:{
     name:'Silver',unit:'per troy oz',accentHex:'#a8b8c8',
     prodCost:14.5,prodCostLabel:'AISC 2025 global avg',
-    histYears:[1970,1975,1980,1985,1990,1995,2000,2005,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
-    histPrice:[1.63,4.42,16.39,6.14,4.82,5.19,4.95,7.32,20.19,35.12,31.15,23.79,19.08,15.68,17.14,17.05,15.71,16.19,20.69,25.14,21.80,23.35,28.50,32.0],
-    histCost:[2.5,3.5,7.0,5.5,4.5,4.5,5.0,6.5,9.0,11.0,12.0,12.5,12.5,11.5,11.5,11.8,12.0,12.5,13.5,13.8,13.5,14.0,14.2,14.5],
+    // Annual avg prices. Sources: Silver Institute / Kitco / USGS.
+    histYears:[1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    histPrice:[1.63,1.55,1.68,2.56,4.71,4.42,4.35,4.62,5.40,11.09,16.39,10.52,7.95,11.44,8.14,6.14,5.47,7.01,6.53,5.50,4.82,4.04,3.94,4.30,5.28,5.19,5.18,4.90,5.54,5.22,4.95,4.37,4.60,4.88,6.66,7.32,11.55,13.38,14.99,14.65,20.19,35.12,31.15,23.79,19.08,15.68,17.14,17.05,15.71,16.19,20.69,25.14,21.80,23.35,28.50,32.00],
+    histCost:[2.5,2.5,2.5,2.8,3.2,3.5,3.5,3.8,4.0,5.5,7.0,6.5,5.5,5.5,5.5,5.5,5.0,5.5,5.5,5.0,4.5,4.3,4.2,4.2,4.3,4.5,4.5,4.5,4.8,5.0,5.0,5.0,5.2,5.5,6.0,6.5,7.5,8.5,9.5,9.0,9.0,11.0,12.0,12.5,12.5,11.5,11.5,11.8,12.0,12.5,13.5,13.8,13.5,14.0,14.2,14.5],
     fetchFn:async()=>{const r=await fetch('https://api.gold-api.com/price/XAG');const d=await r.json();if(!d.price)throw new Error();return{price:d.price,change:d.ch||0,changePct:d.chp||0};}
   },
   WTI:{
     name:'WTI Crude Oil',unit:'per barrel',accentHex:'#7a9e5a',
     prodCost:42,prodCostLabel:'avg US breakeven 2025',
-    histYears:[1970,1973,1974,1975,1979,1980,1985,1990,1991,1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
-    histPrice:[1.8,4.31,11.0,12.2,25.1,37.4,26.9,23.2,21.5,18.4,13.1,19.3,30.4,26.0,26.2,31.1,41.5,56.6,66.1,72.3,99.7,61.9,79.5,95.0,94.1,97.9,93.2,48.7,43.3,50.8,64.9,57.0,41.5,68.1,95.0,77.6,77.4,73.0],
-    histCost:[1.2,2.5,6.5,7.0,12.0,18.0,15.0,12.0,12.0,11.0,10.0,11.0,16.0,16.0,16.0,18.0,22.0,28.0,30.0,32.0,38.0,35.0,38.0,40.0,40.0,40.0,42.0,38.0,38.0,38.0,40.0,38.0,35.0,38.0,40.0,40.0,41.0,42.0],
+    // Annual avg WTI spot. Pre-1983 = posted/first-purchase price. Sources: EIA / BP Statistical Review.
+    histYears:[1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    histPrice:[1.80,1.75,1.90,4.31,11.00,12.21,13.10,14.40,14.85,25.10,37.42,35.24,31.83,29.08,28.78,26.92,15.10,19.18,15.97,19.68,23.19,21.54,20.57,18.43,17.20,18.43,22.00,20.61,13.11,19.31,30.38,25.98,26.16,31.08,41.51,56.59,66.05,72.34,99.67,61.95,79.48,95.11,94.05,97.98,93.17,48.66,43.29,50.80,64.90,57.04,41.47,68.14,95.04,77.64,77.41,73.00],
+    histCost:[1.2,1.3,1.4,2.5,6.5,7.0,7.5,8.0,8.5,12.0,18.0,18.0,16.0,15.0,15.0,15.0,12.0,13.0,12.0,13.0,14.0,13.0,13.0,12.0,12.0,12.0,14.0,14.0,11.0,12.0,16.0,16.0,16.0,18.0,22.0,28.0,28.0,30.0,32.0,30.0,34.0,38.0,38.0,40.0,42.0,38.0,36.0,36.0,38.0,38.0,35.0,38.0,40.0,40.0,41.0,42.0],
     fetchFn:async()=>fetchOilEIA('RWTC')
   },
   BRENT:{
     name:'Brent Crude',unit:'per barrel',accentHex:'#5a8aae',
     prodCost:45,prodCostLabel:'avg global breakeven 2025',
-    histYears:[1987,1990,1991,1995,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
-    histPrice:[18.4,23.7,20.0,17.0,12.7,17.9,28.5,24.4,25.0,28.8,38.3,54.5,65.1,72.7,97.0,61.5,79.5,111.3,111.6,108.7,98.9,52.4,43.7,54.2,71.3,64.2,43.2,70.9,100.9,82.6,80.0,75.0],
-    histCost:[10,12,12,11,10,11,16,16,16,18,22,28,30,32,38,35,38,42,44,44,44,40,40,40,42,42,38,40,44,44,44,45],
+    // Annual avg Brent spot. Sources: EIA / BP Statistical Review / ICE.
+    histYears:[1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+    histPrice:[18.40,14.92,18.23,23.73,20.00,19.32,17.02,15.82,17.02,20.67,19.12,12.72,17.97,28.50,24.44,25.02,28.83,38.27,54.52,65.14,72.70,97.26,61.49,79.50,111.26,111.63,108.66,98.97,52.39,43.73,54.19,71.31,64.37,43.21,70.91,100.93,82.62,80.00,75.00],
+    histCost:[10,10,11,12,12,12,11,11,11,13,13,10,11,16,16,16,18,22,28,30,32,38,35,38,42,44,44,44,40,40,40,42,42,38,40,44,44,44,45],
     fetchFn:async()=>fetchOilEIA('RBRTE')
   }
 };
 
+// Unweighted median (kept for any future use)
 function computeMedian(arr){const s=[...arr].sort((a,b)=>a-b),m=Math.floor(s.length/2);return s.length%2!==0?s[m]:+((s[m-1]+s[m])/2).toFixed(2);}
+
+// Build per-index year-span weights: each point covers the gap to the NEXT point (or 1 yr for the last).
+function buildWeights(years){
+  const w=[];
+  for(let i=0;i<years.length;i++){
+    w.push(i<years.length-1 ? years[i+1]-years[i] : 1);
+  }
+  return w;
+}
+
+// Time-weighted median: expand each ratio by its weight then take classic median.
+function computeWeightedMedian(ratios, years){
+  const w=buildWeights(years);
+  const expanded=[];
+  ratios.forEach((r,i)=>{for(let j=0;j<w[i];j++)expanded.push(r);});
+  expanded.sort((a,b)=>a-b);
+  const m=Math.floor(expanded.length/2);
+  return expanded.length%2!==0 ? expanded[m] : +((expanded[m-1]+expanded[m])/2).toFixed(2);
+}
+
+// Time-weighted mean.
+function computeWeightedMean(ratios, years){
+  const w=buildWeights(years);
+  const totalW=w.reduce((a,b)=>a+b,0);
+  const sum=ratios.reduce((acc,r,i)=>acc+r*w[i],0);
+  return +(sum/totalW).toFixed(2);
+}
 
 let livePrices={}, currentKey='XAU', chart=null;
 let eiaKey=localStorage.getItem('eia_api_key')||'';
@@ -236,8 +268,8 @@ function updateMetrics(key){
   const C=COMMODITIES[key];
   const price=livePrices[key];
   const ratios=C.histYears.map((y,i)=>+(C.histPrice[i]/C.histCost[i]).toFixed(2));
-  const median=computeMedian(ratios);
-  const mean=+(ratios.reduce((a,b)=>a+b,0)/ratios.length).toFixed(2);
+  const median=computeWeightedMedian(ratios,C.histYears);
+  const mean=computeWeightedMean(ratios,C.histYears);
   document.getElementById('m-cost').textContent='~$'+C.prodCost.toLocaleString();
   document.getElementById('m-cost-sub').textContent=C.prodCostLabel;
   if(price){
@@ -269,7 +301,8 @@ function buildChartData(key,view){
     else{prices[prices.length-1]=live;}
   }
   const allRatios=labels.map((y,i)=>+(prices[i]/costs[i]).toFixed(2));
-  const median=computeMedian(C.histYears.map((y,i)=>+(C.histPrice[i]/C.histCost[i]).toFixed(2)));
+  const histRatios=C.histYears.map((y,i)=>+(C.histPrice[i]/C.histCost[i]).toFixed(2));
+  const median=computeWeightedMedian(histRatios,C.histYears);
   const medLine=labels.map(()=>median);
   const accent=C.accentHex;
   const datasets=[];
